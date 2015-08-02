@@ -1,25 +1,20 @@
 'use strict';
 var argv         = require('minimist')(process.argv.slice(2)),
     gulp         = require('gulp'),
+    plugins = require('gulp-load-plugins')(),
     header       = require('gulp-header'),
     gutil        = require('gulp-util'),
     ngAnnotate   = require('gulp-ng-annotate'),
-    compass      = require('gulp-compass'),
-    refresh      = require('gulp-livereload'),
+    sass      = require('gulp-sass'),
     prefix       = require('gulp-autoprefixer'),
     minifyCss    = require('gulp-minify-css'),
     uglify       = require('gulp-uglify'),
-    clean        = require('gulp-rimraf'),
+    clean        = require('del'),
     concat       = require('gulp-concat-util'),
-    express      = require('express'),
-    express_lr   = require('connect-livereload'),
-    tinylr       = require('tiny-lr'),
-    opn          = require('opn'),
     jshint       = require('gulp-jshint'),
     jshintStylish= require('jshint-stylish'),
     pkg          = require('./package.json'),
-    lr,
-    refresh_lr;
+    browserSync = require('browser-sync').create();
 
 var today = new Date();
 
@@ -67,11 +62,7 @@ var Config = {
 // Compile Styles
 gulp.task('styles', function(){
   return gulp.src(Config.paths.source.scss + '/'+pkg.name+'.scss')
-    .pipe(compass({
-      sass: Config.paths.source.scss,
-      css: Config.paths.compileUnminified.css,
-      errLogToConsole: true
-    }))
+    .pipe(sass().on('error', sass.logError))
     .pipe(prefix('last 2 version', '> 5%', 'safari 5', 'ie 8', 'ie 7', 'opera 12.1', 'ios 6', 'android 4'))
     .pipe(gulp.dest(Config.paths.compileUnminified.css));
 });
@@ -122,24 +113,10 @@ gulp.task('dist:css', ['dist:css:clean', 'styles'], function(){
     .pipe(gulp.dest(Config.paths.compileMinified.css));
 });
 
-// Server
-gulp.task('server', function(){
-  express()
-    .use(express_lr())
-    .use(express.static('.'))
-    .listen(Config.port);
-  gutil.log('Server listening on port ' + Config.port);
-});
-
-// LiveReload
-gulp.task('livereload', function(){
-  lr = tinylr();
-  lr.listen(Config.livereloadPort, function(err) {
-    if(err) {
-      gutil.log('Livereload error:', err);
-    }
+gulp.task('browser-sync', function() {
+  browserSync.init({
+    server: "./"
   });
-  refresh_lr=refresh(lr);
 });
 
 // Watches
@@ -150,9 +127,7 @@ gulp.task('watch', function(){
     Config.paths.compileUnminified.css + '/**/*.css',
     Config.paths.compileUnminified.js + '/**/*.js',
     Config.testPage
-  ], function(evt){
-    refresh_lr.changed(evt.path);
-  });
+  ],browserSync.reload);
 });
 
 
@@ -170,7 +145,7 @@ gulp.task('lint', function() {
 gulp.task('build', ['dist:js', 'dist:css']);
 
 // Start server and watch for changes
-gulp.task('default', ['server', 'livereload', 'styles', 'scripts', 'watch'], function(){
+gulp.task('default', ['browser-sync','styles', 'scripts', 'watch'], function(){
   // use the -o arg to open the test page in the browser
   if(argv.o) {
     opn('http://localhost:' + Config.port+'/'+Config.testPage);

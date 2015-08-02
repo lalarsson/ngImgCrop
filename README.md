@@ -1,7 +1,11 @@
 # ngImgCrop
 
-Simple Image Crop directive for AngularJS. Enables to crop a circle or a square out of an image.
+This fork will include jquery.facedetection for cooler image cropping.
 
+So far I've just updated all dependencies and added jquery.facedetection.
+Credits to alexk111 for the original module!
+
+Simple Image Crop directive for AngularJS. Enables to crop a circle or a square out of an image.
 ## Screenshots
 
 ![Circle Crop](https://raw.github.com/alexk111/ngImgCrop/master/screenshots/circle_1.jpg "Circle Crop")

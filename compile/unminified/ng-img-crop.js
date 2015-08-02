@@ -1,17 +1,16 @@
 /*!
  * ngImgCrop v0.3.2
- * https://github.com/alexk111/ngImgCrop
+ * https://github.com/lalarsson/ngImgCrop
  *
- * Copyright (c) 2014 Alex Kaul
+ * Copyright (c) 2015 Lars Larsson
  * License: MIT
  *
- * Generated at Wednesday, December 3rd, 2014, 3:54:12 PM
+ * Generated at Sunday, August 2nd, 2015, 7:36:27 PM
  */
 (function() {
 'use strict';
 
 var crop = angular.module('ngImgCrop', []);
-
 crop.factory('cropAreaCircle', ['cropArea', function(CropArea) {
   var CropAreaCircle = function() {
     CropArea.apply(this, arguments);
@@ -160,7 +159,6 @@ crop.factory('cropAreaCircle', ['cropArea', function(CropArea) {
 
   return CropAreaCircle;
 }]);
-
 
 
 crop.factory('cropAreaSquare', ['cropArea', function(CropArea) {
@@ -375,7 +373,6 @@ crop.factory('cropAreaSquare', ['cropArea', function(CropArea) {
 
   return CropAreaSquare;
 }]);
-
 crop.factory('cropArea', ['cropCanvas', function(CropCanvas) {
   var CropArea = function(ctx, events) {
     this._ctx=ctx;
@@ -460,7 +457,6 @@ crop.factory('cropArea', ['cropCanvas', function(CropCanvas) {
 
   return CropArea;
 }]);
-
 crop.factory('cropCanvas', [function() {
   // Shape = Array of [x,y]; [0, 0] - center
   var shapeArrowNW=[[-0.5,-2],[-3,-4.5],[-0.5,-7],[-7,-7],[-7,-0.5],[-4.5,-3],[-2,-0.5]];
@@ -588,7 +584,6 @@ crop.factory('cropCanvas', [function() {
 
   };
 }]);
-
 /**
  * EXIF service is based on the exif-js library (https://github.com/jseidelin/exif-js)
  */
@@ -1367,7 +1362,6 @@ crop.service('cropEXIF', [function() {
       return findEXIFinJPEG(file);
   }
 }]);
-
 crop.factory('cropHost', ['$document', 'cropAreaCircle', 'cropAreaSquare', 'cropEXIF', function($document, CropAreaCircle, CropAreaSquare, cropEXIF) {
   /* STATIC FUNCTIONS */
 
@@ -1733,7 +1727,6 @@ crop.factory('cropHost', ['$document', 'cropAreaCircle', 'cropAreaSquare', 'crop
 
 }]);
 
-
 crop.factory('cropPubSub', [function() {
   return function() {
     var events = {};
@@ -1756,7 +1749,6 @@ crop.factory('cropPubSub', [function() {
     };
   };
 }]);
-
 crop.directive('imgCrop', ['$timeout', 'cropHost', 'cropPubSub', function($timeout, CropHost, CropPubSub) {
   return {
     restrict: 'E',
